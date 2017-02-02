@@ -6,7 +6,9 @@
     box-sizing: border-box;
 }
 
-body, input, button {
+body,
+input,
+button {
     font-family: 'Roboto', sans-serif;
 }
 
@@ -40,7 +42,9 @@ form {
     background: #85b5ca;
 }
 
-fieldset, legend, button {
+fieldset,
+legend,
+button {
     padding: 0;
     border: none;
 }
@@ -49,7 +53,8 @@ fieldset {
     margin-top: 1.5em;
 }
 
-legend, button {
+legend,
+button {
     font-size: 1.25em;
 }
 
@@ -60,7 +65,9 @@ legend {
     margin-bottom: 1.125em;
 }
 
-input[type="text"], input[type="email"], legend {
+input[type="text"],
+input[type="email"],
+legend {
     width: 100%;
 }
 
@@ -70,7 +77,8 @@ label {
     margin-bottom: .5em;
 }
 
-input, select {
+input,
+select {
     margin-bottom: 1.125em;
 }
 
@@ -89,7 +97,8 @@ input:focus {
     transition: border-color .4s, background-color .4s;
 }
 
-input[type="checkbox"], input[type="radio"] {
+input[type="checkbox"],
+input[type="radio"] {
     display: inline-block;
 }
 
@@ -185,7 +194,7 @@ button:hover {
     .col {
         float: left;
     }
-    .col+ .col {
+    .col+.col {
         margin-left: 2.5%;
     }
     .col-3 {
