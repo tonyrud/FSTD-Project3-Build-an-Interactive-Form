@@ -13,7 +13,7 @@ button {
 }
 
 body {
-    font: 1em/1.5;
+    font-size: 1em;
     color: #184f68;
     background: #accbd9;
 }
@@ -133,6 +133,15 @@ button:hover {
     font-weight: bold;
     color: red;
     margin-left: 1em;
+}
+
+#price {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+#price:before {
+    content: 'Register Total: '
 }
 
 

@@ -9,10 +9,9 @@
 let $jobRole = $('#title'),
     $jobOther = $('<input type="text" id="other-title" placeholder="Your Job Role">'),
     $designTheme = $('#design'),
-    $colors = $('#color'),
-    $payment = $('#payment'),
     registerTotal,
-    $mailField = $('#mail');
+    $mailField = $('#mail'),
+    prevLocation;
 
 
 $('#name').focus();
@@ -29,14 +28,14 @@ $('#colors-js-puns').hide();
 -----------------------*/
 
 // Check job role select options
-$jobRole.on('change', function(e) {
+$jobRole.on('change', function (e) {
     $jobOther.insertAfter($('#title')).hide();
     if ($(this).val() === 'other') {
         $jobOther.show();
     }
 })
 
-$designTheme.on('change', function(e) {
+$designTheme.on('change', function (e) {
     $('#colors-js-puns').show();
 
 
@@ -53,39 +52,40 @@ $designTheme.on('change', function(e) {
         $("#color").children().show();
         $("#color").children(":contains('Puns')").hide();
     } else {
-        $("#color").children().show();
+        $("#color").children().hide();
     }
 })
 
 //Register activites event change
-$('.activities input').on('change', function(e) {
-  // debugger
-
-  // if(!e.target.checked){
-  //   e.target.checked = true;
-  // }
-
-  checkCheckbox();
+$('.activities input').on('change', function (e) {
     let $current = $(this),
         name = $current.attr('name'),
         labelText = $current.parent().text(),
-        checked = $current.prop('checked');
+        checked = $current.prop('checked'),
+        checkedTxt = $(".activities input:checked").parent().text();
 
-    //clear and set checkboxes
-    $("label").removeClass('notAvail');
-    // $('.activities input').prop('checked', false);
-    // $current.prop('checked', true);
+      if($('.activities input').index($(this)) === prevLocation){
+          $(".activities label").removeClass('notAvail');
+          return;
+      }
 
     //check what text is in the clicked label
     if (labelText.indexOf('1pm') >= 0) {
         showLabels('1pm', $current);
+        addRegisterTotals(100);
     } else if (labelText.indexOf('9am') >= 0) {
         showLabels('9am', $current);
+        addRegisterTotals(100);
+    } else {
+        addRegisterTotals(200);
     }
+
+
+    prevLocation = $('.activities input').index($(this));
 });
 
 //event for payment changes
-$('#payment').on('change', function(e) {
+$('#payment').on('change', function (e) {
     // debugger
     if ($(this).val() === "credit card") {
         showPayments($('#credit-card'));
@@ -97,7 +97,7 @@ $('#payment').on('change', function(e) {
 });
 
 //event for form submit validation
-$('form').on('submit', function(e) {
+$('form').on('submit', function (e) {
     e.preventDefault();
     // debugger
     checkName();
@@ -105,20 +105,20 @@ $('form').on('submit', function(e) {
     checkCheckbox();
     checkCreditCard();
 
-    if($('.notValid').length === 0) {
-      $('.submitMsg').hide();
-      console.log('form valid');
+    if ($('.notValid').length === 0) {
+        $('.submitMsg').hide();
+        console.log('form valid');
     } else {
-      $('.submitMsg').show();
+        $('.submitMsg').show();
     }
 });
 
-$('#name').keyup(function(e){
-  checkName();
+$('#name').keyup(function (e) {
+    checkName();
 })
 
-$('#mail').keyup(function(e){
-  validateEmail();
+$('#mail').keyup(function (e) {
+    validateEmail();
 })
 
 /*-----------------------
@@ -129,7 +129,14 @@ $('#mail').keyup(function(e){
 function showLabels(name, current) {
     $("label:contains(" + name + ")").addClass('notAvail');
     current.parent().removeClass('notAvail');
-    registerTotal += current
+}
+
+function addRegisterTotals(amount) {
+    registerTotal = amount;
+    $(".activities p").remove();
+    $('.activities').append(`<p id="price"> ${registerTotal} </p>`);
+    
+
 }
 
 //run when payment has changed
@@ -160,32 +167,32 @@ function validateEmail() {
     $('.emailMsg').hide();
 }
 
-function checkCheckbox(){
-  if($(".activities input:checked").length > 0){
-    $(".activities").removeClass("notValid");
-  }else{
-    $(".activities").addClass("notValid");
-  }
+function checkCheckbox() {
+    if ($(".activities input:checked").length > 0) {
+        $(".activities").removeClass("notValid");
+    } else {
+        $(".activities").addClass("notValid");
+    }
 };
 
-function checkCreditCard(){
-  if($("#cc-num").val().length < 13 || $("#cc-num").val().length > 16){
-    $("#cc-num").addClass("notValid");
-  }else{
-    $("#cc-num").removeClass("notValid");
-  }
+function checkCreditCard() {
+    if ($("#cc-num").val().length < 13 || $("#cc-num").val().length > 16) {
+        $("#cc-num").addClass("notValid");
+    } else {
+        $("#cc-num").removeClass("notValid");
+    }
 
-  if($("#zip").val().length === 5){
-    $("#zip").removeClass("notValid");
-  }else{
-    $("#zip").addClass("notValid");
-  }
+    if ($("#zip").val().length === 5) {
+        $("#zip").removeClass("notValid");
+    } else {
+        $("#zip").addClass("notValid");
+    }
 
-  if($("#cvv").val().length === 3){
-    $("#cvv").removeClass("notValid");
-  }else{
-    $("#cvv").addClass("notValid");
-  }
+    if ($("#cvv").val().length === 3) {
+        $("#cvv").removeClass("notValid");
+    } else {
+        $("#cvv").addClass("notValid");
+    }
 };
 
 
