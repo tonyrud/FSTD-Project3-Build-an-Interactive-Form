@@ -6,17 +6,15 @@
      Variables
      ========================== */
 
-        //DOM var
+    //DOM var
     let $jobRole = $('#title'),
         $jobOther = $('<input type="text" id="other-title" placeholder="Your Job Role">'),
         $designTheme = $('#design'),
         $activitiesLabels = $(".activities label"),
         $activitiesChecks = $('.activities input'),
         $mailField = $('#mail'),
-        
         //script var
-        registerTotal = 0,
-        prevLocation;
+        registerTotal = 0;
 
     //init page DOM and submit warnings
     $('#name').focus();
@@ -42,8 +40,6 @@
 
     $designTheme.on('change', function (e) {
         $('#colors-js-puns').show();
-
-
         if ($(this).val() === 'js puns') {
             $("#color [value=tomato]").attr("selected", false);
             $("#color [value=cornflowerblue]").attr("selected", true);
@@ -65,31 +61,30 @@
     $('.activities input').on('change', function (e) {
         let $current = $(this),
             labelText = $current.parent().text(),
-            checked = $current.prop('checked');
+            checkedDay = getCurrentDay(labelText),
+            checkedTime = getCurrentTime(labelText);
 
         //add register totals
         addRegisterTotals($current);
 
-        //check if is not currently checked
-        if (!$current.is(':checked')) {
-            $activitiesLabels.removeClass('notAvail');
-            $activitiesChecks.prop('disabled', false);
-            return;
+        //run if box was checked
+        if ($current.is(':checked')) {
+            if (checkedDay === 'Tuesday') {
+                //add class to current time selected
+                showLabels(checkedTime);
+                //clear label on checked box
+                clearLabel($current);
+            }
+        } else {
+            if (checkedDay === 'Tuesday') {
+                //clear labels
+                clearLabels(checkedTime);
+            }
         }
-
-        //check what text is in the clicked label
-        if (labelText.indexOf('1pm') >= 0) {
-            showLabels('1pm', $current);
-        } else if (labelText.indexOf('9am') >= 0) {
-            showLabels('9am', $current);
-        }
-
-        prevLocation = $('.activities input').index($(this));
     });
 
     //event for payment changes
     $('#payment').on('change', function (e) {
-        // debugger
         if ($(this).val() === "credit card") {
             showPayments($('#credit-card'));
         } else if ($(this).val() === "paypal") {
@@ -107,11 +102,9 @@
         checkCheckbox();
         checkCreditCard();
 
-
         //check if notValid class has been added to anything
         if ($('.notValid').length === 0) {
             $('.submitMsg').hide();
-            console.log('form valid');
         } else {
             e.preventDefault();
             $('.submitMsg').show();
@@ -131,18 +124,37 @@
     -----------------------*/
 
     //run when input changed to disable boxes
-    function showLabels(name, current) {
+    function showLabels(string) {
+        //add class
+        $(`label:contains("${string}"):contains("Tuesday")`).addClass('notAvail');
+        //disable check boxes
+        $(`label:contains("${string}"):contains("Tuesday")`).children().prop('disabled', true);
+    }
 
-        //change classes
-        $("label:contains(" + name + ")").addClass('notAvail');
+    function clearLabels(string) {
+        //remove class
+        $(`label:contains("${string}"):contains("Tuesday")`).removeClass('notAvail');
+        //enable check boxes
+        $(`label:contains("${string}"):contains("Tuesday")`).children().prop('disabled', false);
+    }
+
+    //get what day was selected
+    let getCurrentDay = (el) => checkIfTxt(el, 'Tuesday') ? 'Tuesday' : 'Other';
+
+    //get what time was selected
+    let getCurrentTime = (el) => checkIfTxt(el, '1pm') ? '1pm' : '9am';
+
+    //return true if txt found
+    let checkIfTxt = (current, string) => current.indexOf(string) >= 0;
+
+    function clearLabel(current) {
+        //remove not active on current label
         current.parent().removeClass('notAvail');
+        //enable checkbox
+        current.prop('disabled', false);
 
         //remove form invalid error
         $(".activities").removeClass("notValid");
-
-        //disable check boxes
-        $("label:contains(" + name + ")").children().prop('disabled', true);
-        current.prop('disabled', false);
     }
 
     //add total register cost
@@ -161,7 +173,7 @@
             }
         }
         $(".activities p").remove();
-        $('.activities').append(`<p id="price"> ${registerTotal} </p>`);
+        $('.activities').append(`<p id="price"> $${registerTotal} </p>`);
     }
 
     //run when payment has changed
