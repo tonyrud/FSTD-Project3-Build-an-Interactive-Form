@@ -8,7 +8,7 @@
 
     //DOM var
     let $jobRole = $('#title'),
-        $jobOther = $('<input type="text" id="other-title" placeholder="Your Job Role">'),
+        $jobOther = $('#other-title'),
         $designTheme = $('#design'),
         $activitiesLabels = $(".activities label"),
         $activitiesChecks = $('.activities input'),
@@ -24,6 +24,7 @@
     $('button').after('<span class="submitMsg">Please Correctly Fill in the Fields Shown Above</span>');
     $('.submitMsg').hide();
     $('#colors-js-puns').hide();
+    $jobOther.hide();
 
 
     /*-----------------------
@@ -32,7 +33,7 @@
 
     // Check job role select options
     $jobRole.on('change', function (e) {
-        $jobOther.insertAfter($('#title')).hide();
+        $jobOther.hide();
         if ($(this).val() === 'other') {
             $jobOther.show();
         }
